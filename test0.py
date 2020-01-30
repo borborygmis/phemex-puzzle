@@ -3,6 +3,7 @@
 Tests converting words to integers in various ways using words from the puzzle's
 picture.
 """
+from util import *
 
 def testk0(words):
     sk = SigningKey.from_secret_exponent(PRIME21E, curve=SECP256k1)
