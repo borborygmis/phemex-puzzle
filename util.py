@@ -12,12 +12,31 @@ from ecdsa import SigningKey, SECP256k1
 
 PRIME21E = 957496696762772407663
 TARGET_LEN = 27
+COMPRESSED_PUBLIC_KEY = '02b4a72e4aaa69ba04b80c6891df01f50d191a65eccc61e4e9862d1e421ce815b3'
+PUBLIC_ADDRESS = '1h8BNZkhsPiu6EKazP19WkGxDw3jHf9aT'
+#WORDS = ['XRP', 'BTC', 'ETH', 'Phemex']
+#WORDS = ['957496696762772407663', 'XRP', 'BTC', 'ETH', 'Phemex']
+WORDS = ['957496696762772407663', 'XRP', 'BTC', 'ETH', 'Phemex', 'Pheme', 'Mex']
+WORDS_EXTRA = WORDS + 'First 21-digit prime found in consecutive digits of e'.split(' ')
 
 def to_hex(num):
     return hex(int(num)).lstrip("0x").rstrip("L")
 
+def tohex(s):
+    o = ''
+    for c in s:
+        x = str( hex(ord(c) ))[2:]
+        o += x
+    return o
+
 def uncompressed_key(key):
     return Key(bytes_to_wif(key.to_bytes(), compressed=False))
+
+def tohn(s):
+    return int(tohex(s), 16)
+
+def slen(n):
+    return len(str(n))
 
 def test_key(key, addr):
     if (str(key.address) == str(addr)):
@@ -34,11 +53,28 @@ def test_key(key, addr):
         return True
     return False
 
+def key_from_int_comp(intk):
+    return Key.from_int(int(intk))
+
+def key_from_int_uncomp(intk):
+    priv_key_compressed = Key.from_int(int(intk))
+    priv_key_uncompressed = uncompressed_key(priv_key_compressed)
+    return priv_key_uncompressed
+
+def key_from_hex_comp(intk):
+    return Key.from_hex(intk)
+
+def key_from_hex_uncomp(intk):
+    priv_key_compressed = Key.from_hex(intk)
+    priv_key_uncompressed = uncompressed_key(priv_key_compressed)
+    return priv_key_uncompressed
+
 def test_int(intk, addr='1h8BNZkhsPiu6EKazP19WkGxDw3jHf9aT'):
     try:
         priv_key_compressed = Key.from_int(int(intk))
         priv_key_uncompressed = uncompressed_key(priv_key_compressed)
-    except:
+    except Exception as err:
+        print("ERROR: test_int:", err)
         return False
     """Debug:
     print('addrc:{} addru:{} wifc:{} wifu:{}'.format(

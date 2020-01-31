@@ -5,19 +5,6 @@ picture.
 """
 from util import *
 
-def tohex(s):
-    o = ''
-    for c in s:
-        x = str( hex(ord(c) ))[2:]
-        o += x
-    return o
-
-def tohn(s):
-    return int(tohex(s), 16)
-
-def slen(n):
-    return len(str(n))
-
 def maybe0(s):
     n = tohn(s)
     if slen(n) == 27:
@@ -38,24 +25,21 @@ def maybe(s):
     maybe1(s)
 
 def main():
-    coins = ['XRP', 'BTC', 'ETH', 'Phemex']
-    for p in permutations(coins):
+    for p in permutations(WORDS):
         maybe(''.join(p))
-
-    for p in permutations(coins, 3):
+    for p in permutations(WORDS, 4):
         maybe(''.join(p))
-    
-    for p in permutations(coins, 2):
+    for p in permutations(WORDS, 3):
         maybe(''.join(p))
-
-    coins_extra = coins + 'First 21-digit prime found in consecutive digits of e'.split(' ')
-    for p in permutations(coins_extra, 5):
+    for p in permutations(WORDS, 2):
         maybe(''.join(p))
-    for p in permutations(coins_extra, 4):
+    for p in permutations(WORDS_EXTRA, 5):
         maybe(''.join(p))
-    for p in permutations(coins_extra, 3):
+    for p in permutations(WORDS_EXTRA, 4):
         maybe(''.join(p))
-    for p in permutations(coins_extra, 2):
+    for p in permutations(WORDS_EXTRA, 3):
+        maybe(''.join(p))
+    for p in permutations(WORDS_EXTRA, 2):
         maybe(''.join(p))
 
 if __name__ == '__main__':

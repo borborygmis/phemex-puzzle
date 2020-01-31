@@ -119,19 +119,13 @@ def test_all(li):
         test(li)
 
 def main():
-    coins = ['XRP', 'BTC', 'ETH',] # 'Phemex']
-    for coin in coins:
-        test_all([coin, 'Phemex'])
-        test_all(['Phemex', coin])
-
-    for p in permutations(coins):
+    for p in permutations(WORDS):
         test_all(p)
-
-    coins_extra = coins + 'First 21-digit prime found in consecutive digits of e'.split(' ')
-    coins_extra = coins_extra + ['Phemex',]
-    for p in permutations(coins_extra, 3):
+    for p in permutations(WORDS_EXTRA, 4):
         test_all(p)
-    for p in permutations(coins_extra, 2):
+    for p in permutations(WORDS_EXTRA, 3):
+        test_all(p)
+    for p in permutations(WORDS_EXTRA, 2):
         test_all(p)
 
 if __name__ == '__main__':

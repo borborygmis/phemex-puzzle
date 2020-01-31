@@ -4,6 +4,8 @@ Links:
 * https://phemex.com/references/articles/try-to-solve-our-2-btc-puzzle
 * https://phemex.com/references/articles/a-letter-from-max
 
+See Oli's attempts and notes (clues.md helps):
+* https://github.com/olalonde/phemex-puzzle/
 
 # Clues
 
