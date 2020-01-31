@@ -5,6 +5,9 @@ picture.
 """
 from util import *
 
+def dprint(s):
+    return #print(s)
+
 def testk0(words):
     sk = SigningKey.from_secret_exponent(PRIME21E, curve=SECP256k1)
     words = ''.join(words)
@@ -12,7 +15,7 @@ def testk0(words):
     for w in words:
         n += str(int(ord(w)))
     end = str(PRIME21E + int(n))
-    print('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
+    dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
     sig = sk.sign(n.encode())
     test_hex(sig.hex())
     sig = sk.sign(end.encode())
@@ -30,7 +33,7 @@ def testk1(words):
     for w in words:
         n += str(int(ord(w)))
     end = str(PRIME21E + int(n))
-    print('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
+    dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
     test_hex(to_hex(n))
     test_hex(to_hex(end))
 
@@ -43,7 +46,7 @@ def testk2(words):
 
     n = ''.join(sorted(n))
     end = str(PRIME21E + int(n))
-    print('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
+    dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
     sig = sk.sign(n.encode())
     test_hex(sig.hex())
     h = hashlib.sha256(end.encode()).hexdigest()
@@ -57,7 +60,7 @@ def testk3(words):
         n.append(str(int(ord(w))))
     n = ''.join(sorted(n))
     end = str(PRIME21E + int(n))
-    print('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
+    dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
     test_int(n)
     test_int(end)
 
@@ -67,7 +70,7 @@ def testk4(words):
     for w in words:
         n += str(int(ord(w)))
     end = str(PRIME21E + int(n))
-    print('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
+    dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
     test_int(n)
     test_int(end)
 
@@ -78,7 +81,7 @@ def testk5(words):
         n += int(ord(w))
     n = str(n)
     end = str(PRIME21E + int(n))
-    print('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
+    dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
     test_int(n)
     test_int(end)
 
@@ -89,7 +92,7 @@ def testk6(words):
         n.append(str(int(ord(w))*PRIME21E))
     n = ''.join(n)
     end = str(PRIME21E + int(n))
-    print('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
+    dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
     test_int(n)
     test_int(end)
 
@@ -100,7 +103,7 @@ def testk7(words):
         n.append(str(int(ord(w))*PRIME21E))
     n = ''.join(sorted(n))
     end = str(PRIME21E + int(n))
-    print('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
+    dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
     test_int(n)
     test_int(end)
 
@@ -119,12 +122,21 @@ def test_all(li):
         test(li)
 
 def main():
+    print('t:1')
     for p in permutations(WORDS):
         test_all(p)
-    for p in permutations(WORDS_EXTRA, 4):
+    print('t:2')
+    for p in permutations(WORDS, 3):
         test_all(p)
+    print('t:3')
+    for p in permutations(WORDS, 2):
+        test_all(p)
+    #for p in permutations(WORDS_EXTRA, 4):
+    #    test_all(p)
+    print('t:4')
     for p in permutations(WORDS_EXTRA, 3):
         test_all(p)
+    print('t:5')
     for p in permutations(WORDS_EXTRA, 2):
         test_all(p)
 
