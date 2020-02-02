@@ -20,9 +20,25 @@ def maybe1(s):
         test_hex(to_hex(n))
         test_int(n)
 
+def maybe2(s):
+    n = tohn(s) + PRIME21E
+    if slen(n) == 27:
+        print(s, tohex(s), n, slen(n))
+        test_hex(to_hex(n))
+        test_int(n)
+
+def maybe3(s):
+    n = tohn(s) - PRIME21E
+    if slen(n) == 27:
+        print(s, tohex(s), n, slen(n))
+        test_hex(to_hex(n))
+        test_int(n)
+
 def maybe(s):
     maybe0(s)
     maybe1(s)
+    maybe2(s)
+    maybe3(s)
 
 def main():
     for p in permutations(WORDS):

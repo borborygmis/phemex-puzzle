@@ -14,12 +14,14 @@ from ecdsa import SigningKey, SECP256k1
 PRIME21E = 957496696762772407663
 TARGET_LEN = 27
 COMPRESSED_PUBLIC_KEY = '02b4a72e4aaa69ba04b80c6891df01f50d191a65eccc61e4e9862d1e421ce815b3'
-PUBLIC_ADDRESS = '1h8BNZkhsPiu6EKazP19WkGxDw3jHf9aT'
+COMP_PUBLIC_ADDRESS = '1h8BNZkhsPiu6EKazP19WkGxDw3jHf9aT'
+UNCP_PUBLIC_ADDRESS = '1LPmwxe59KD6oEJGYinx7Li1oCSRPCSNDY'
+
 #WORDS = ['XRP', 'BTC', 'ETH', 'Phemex']
 #WORDS = ['957496696762772407663', 'XRP', 'BTC', 'ETH', 'Phemex']
 #WORDS = ['XRP', 'BTC', 'ETH', 'Phemex', 'Pheme',]
-WORDS = ['957496696762772407663', 'XRP', 'BTC', 'ETH', 'Phemex', 'Pheme', 'Mex', 'mex']
-#WORDS = ['XRP', 'BTC', 'ETH', 'Phemex', 'Pheme',]
+#WORDS = ['957496696762772407663', 'XRP', 'BTC', 'ETH', 'Phemex', 'Pheme', 'Mex', 'mex']
+WORDS = ['XRP', 'BTC', 'ETH', 'Phemex', 'Pheme', '957496696762772407663']
 WORDS_EXTRA = WORDS + 'First 21-digit prime found in consecutive digits of e'.split(' ')
 
 def to_hex(num):
@@ -42,7 +44,8 @@ def slen(n):
     return len(str(n))
 
 def test_key(key):
-    if str(key.address) == PUBLIC_ADDRESS or COMPRESSED_PUBLIC_KEY == bytes_to_hex(key.public_key):
+    if str(key.address) == COMP_PUBLIC_ADDRESS or \
+            str(key.address) == UNCP_PUBLIC_ADDRESS:
         print('-*-'*30)
         print('-*-'*30)
         print('found private key!')
