@@ -2,6 +2,8 @@
 """
 reused functions, constants, imports, etc
 """
+import sys
+import traceback
 from math import e
 import hashlib
 from itertools import permutations
@@ -9,6 +11,8 @@ from itertools import permutations
 from bit import Key
 from bit.format import bytes_to_wif
 from bit.utils import bytes_to_hex
+from bit.base58 import b58encode, b58decode
+import bit.utils as utils
 from ecdsa import SigningKey, SECP256k1
 
 PRIME21E = 957496696762772407663
@@ -24,6 +28,9 @@ UNCP_PUBLIC_ADDRESS = '1LPmwxe59KD6oEJGYinx7Li1oCSRPCSNDY'
 WORDS = ['XRP', 'BTC', 'ETH', 'Phemex', 'Pheme', '957496696762772407663']
 WORDS_EXTRA = WORDS + 'First 21-digit prime found in consecutive digits of e'.split(' ')
 
+def to_binary(s):
+    return ''.join(format(i, 'b') for i in bytearray(s, encoding='utf-8'))
+
 def to_hex(num):
     return hex(int(num)).lstrip("0x").rstrip("L")
 
@@ -36,6 +43,9 @@ def tohex(s):
 
 def uncompressed_key(key):
     return Key(bytes_to_wif(key.to_bytes(), compressed=False))
+
+def compressed_key(key):
+    return Key(bytes_to_wif(key.to_bytes(), compressed=True))
 
 def tohn(s):
     return int(tohex(s), 16)
@@ -52,7 +62,7 @@ def test_key(key):
         print(key.to_wif())
         print('-*-'*30)
         print('-*-'*30)
-        print(key.get_balance('btc'))
+        print(key.get_balance())
         print('-*-'*30)
         print('-*-'*30)
         exit(0) #kill it since we found the key
@@ -76,11 +86,23 @@ def key_from_hex_uncomp(intk):
     return priv_key_uncompressed
 
 def test_int(intk, debug=False):
+    if int(intk) == 0 or int(intk) > 115792089237316195423570985008687907852837564279074904382605163141518161494337:
+        return
     try:
         priv_key_compressed = Key.from_int(int(intk))
         priv_key_uncompressed = uncompressed_key(priv_key_compressed)
+        #priv_key_compressed2 = compressed_key(int(intk))
+        priv_key_compressed2 = compressed_key(priv_key_compressed) #int(intk))
+        priv_key_compressed3 = Key.from_int(int(intk)&PRIME21E)
+        priv_key_c2 = Key.from_bytes(
+            b58decode(b58encode(
+                utils.hex_to_bytes(utils.int_to_hex(int(intk)))
+            ))
+        )
+        priv_key_uc2 = uncompressed_key(priv_key_c2)
     except Exception as err:
-        #print("ERROR: test_int:", err)
+        print("ERROR: test_int:", err, 'intk:', intk)
+        traceback.print_exc(file=sys.stdout)
         return False
     """Debug:
     print('addrc:{} addru:{} wifc:{} wifu:{}'.format(
@@ -99,9 +121,17 @@ def test_int(intk, debug=False):
             bytes_to_hex(priv_key_compressed.public_key),
             bytes_to_hex(priv_key_uncompressed.public_key),
         )
+    if test_key(priv_key_compressed3):
+        return True
     if test_key(priv_key_compressed):
         return True
+    if test_key(priv_key_compressed2):
+        return True
     if test_key(priv_key_uncompressed):
+        return True
+    if test_key(priv_key_uc2):
+        return True
+    if test_key(priv_key_c2):
         return True
     return False
 
