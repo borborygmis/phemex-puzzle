@@ -61,8 +61,8 @@ def testk3(words):
     n = ''.join(sorted(n))
     end = str(PRIME21E + int(n))
     dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
-    test_int(n)
-    test_int(end)
+    test_int(n, do_endian=True)
+    test_int(end, do_endian=True)
 
 def testk4(words):
     words = ''.join(words)
@@ -71,8 +71,8 @@ def testk4(words):
         n += str(int(ord(w)))
     end = str(PRIME21E + int(n))
     dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
-    test_int(n)
-    test_int(end)
+    test_int(n, do_endian=True)
+    test_int(end, do_endian=True)
 
 def testk5(words):
     words = ''.join(words)
@@ -82,8 +82,8 @@ def testk5(words):
     n = str(n)
     end = str(PRIME21E + int(n))
     dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
-    test_int(n)
-    test_int(end)
+    test_int(n, do_endian=True)
+    test_int(end, do_endian=True)
 
 def testk6(words):
     words = ''.join(words)
@@ -93,8 +93,8 @@ def testk6(words):
     n = ''.join(n)
     end = str(PRIME21E + int(n))
     dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
-    test_int(n)
-    test_int(end)
+    test_int(n, do_endian=True)
+    test_int(end, do_endian=True)
 
 def testk7(words):
     words = ''.join(words)
@@ -104,8 +104,8 @@ def testk7(words):
     n = ''.join(sorted(n))
     end = str(PRIME21E + int(n))
     dprint('{} {}:{} {}:{}'.format(words, len(n), n, len(end), end))
-    test_int(n)
-    test_int(end)
+    test_int(n, do_endian=True)
+    test_int(end, do_endian=True)
 
 def test_all(li):
     tests = (
@@ -124,6 +124,7 @@ def test_all(li):
 def main():
     print('t:1')
     for p in permutations(WORDS):
+        print(p)
         test_all(p)
     print('t:2')
     for p in permutations(WORDS, 3):

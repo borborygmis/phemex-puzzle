@@ -6,7 +6,8 @@ import sys
 import traceback
 from math import e
 import hashlib
-from itertools import permutations
+from itertools import permutations, product
+import struct
 
 from bit import Key
 from bit.format import bytes_to_wif
@@ -25,8 +26,17 @@ UNCP_PUBLIC_ADDRESS = '1LPmwxe59KD6oEJGYinx7Li1oCSRPCSNDY'
 #WORDS = ['957496696762772407663', 'XRP', 'BTC', 'ETH', 'Phemex']
 #WORDS = ['XRP', 'BTC', 'ETH', 'Phemex', 'Pheme',]
 #WORDS = ['957496696762772407663', 'XRP', 'BTC', 'ETH', 'Phemex', 'Pheme', 'Mex', 'mex']
-WORDS = ['XRP', 'BTC', 'ETH', 'Phemex', 'Pheme', '957496696762772407663']
+# lower
+WORDS = ['XRP', 'BTC', 'ETH', 'Phemex', 'Pheme', ] #, "Φήμη" #'957496696762772407663']
 WORDS_EXTRA = WORDS + 'First 21-digit prime found in consecutive digits of e'.split(' ')
+# reversed
+RWORDS = ['PRX', 'CTB', 'HTE', 'xemehP', 'emehP']
+RWORDS_EXTRA = ['PRX', 'CTB', 'HTE', 'xemehP', 'emehP', 'tsriF', 'tigid-12', 'emirp', 'dnuof', 'ni', 'evitucesnoc', 'stigid', 'fo', 'e']
+
+#upper
+UWORDS = ['XRP', 'BTC', 'ETH', 'PHEMEX', 'PHEME', ] #, "ΦΉΜΗ" #'957496696762772407663']
+UWORDS_EXTRA = WORDS + 'FIRST 21-DIGIT PRIME FOUND IN CONSECUTIVE DIGITS OF E'.split(' ')
+#WORDS_EXTRA = WORDS + 'First 21-digit prime found in consecutive digits of ℇ'.split(' ')
 
 def to_binary(s):
     return ''.join(format(i, 'b') for i in bytearray(s, encoding='utf-8'))
@@ -47,6 +57,18 @@ def uncompressed_key(key):
 def compressed_key(key):
     return Key(bytes_to_wif(key.to_bytes(), compressed=True))
 
+def adddec(s):
+    t = 0
+    for i in s:
+        t += ord(i)
+    return t
+
+def muldec(s):
+    t = 1
+    for i in s:
+        t *= ord(i)
+    return t
+
 def tohn(s):
     return int(tohex(s), 16)
 
@@ -54,8 +76,13 @@ def slen(n):
     return len(str(n))
 
 def test_key(key):
+    found = False
     if str(key.address) == COMP_PUBLIC_ADDRESS or \
             str(key.address) == UNCP_PUBLIC_ADDRESS:
+        found = True
+    if key.pub_to_hex() == COMPRESSED_PUBLIC_KEY:
+        found = True
+    if found:
         print('-*-'*30)
         print('-*-'*30)
         print('found private key!')
@@ -85,9 +112,21 @@ def key_from_hex_uncomp(intk):
     priv_key_uncompressed = uncompressed_key(priv_key_compressed)
     return priv_key_uncompressed
 
-def test_int(intk, debug=False):
+def test_int(intk, debug=False, do_endian=True):
+    if do_endian:
+        n = int(intk)
+        n2 = int.from_bytes(n.to_bytes((n.bit_length() + 7) // 8, 'big') or b'\0', byteorder='little')
+        #print(n, '->', n2)
+        test_int(n2, do_endian=False)
+        # concat PRIME21E
+        n3 = str(intk)+str(PRIME21E)
+        n4 = str(PRIME21E)+str(intk)
+        test_int(n3, do_endian=False)
+        test_int(n4, do_endian=False)
+        #test_int(struct.pack('>L', int(intk)))
+
     if int(intk) == 0 or int(intk) > 115792089237316195423570985008687907852837564279074904382605163141518161494337:
-        return
+        return 'invalid size'
     try:
         priv_key_compressed = Key.from_int(int(intk))
         priv_key_uncompressed = uncompressed_key(priv_key_compressed)

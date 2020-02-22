@@ -48,12 +48,20 @@ def main():
     for w in words:
         i = tohn(w)
         results[w] = i
-    
+    sr = []    
     for k,v in results.items():
         for kk, vv in results.items():
             #if kk == k: continue
             print('{}x{} = {}'.format(k, kk, u2d(s10(v*vv))))
+            #print('{}x{} = {}'.format(k, kk, u2d(
+            sx = s10(v*vv*6)
+            sr.append(str(sx))
+            #print(sx, slen(sx))
 
+    for p in permutations(sr, 3):
+        x = ''.join(p)
+        #print(slen(x), x)
+        test_int(x)
     print('Phemex = {}'.format(u2d(s10(results['Phemex']))))
 
 if __name__ == '__main__':
