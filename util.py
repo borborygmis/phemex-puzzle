@@ -27,16 +27,17 @@ UNCP_PUBLIC_ADDRESS = '1LPmwxe59KD6oEJGYinx7Li1oCSRPCSNDY'
 #WORDS = ['XRP', 'BTC', 'ETH', 'Phemex', 'Pheme',]
 #WORDS = ['957496696762772407663', 'XRP', 'BTC', 'ETH', 'Phemex', 'Pheme', 'Mex', 'mex']
 # lower
-WORDS = ['XRP', 'BTC', 'ETH', 'Phemex', 'Pheme', ] #, "Φήμη" #'957496696762772407663']
+WORDS = ['XRP', 'BTC', 'ETH', 'Phemex', 'Pheme', 'Satoshi', 'Nakamoto'] #, "Φήμη" #'957496696762772407663']
 WORDS_EXTRA = WORDS + 'First 21-digit prime found in consecutive digits of e'.split(' ')
 # reversed
-RWORDS = ['PRX', 'CTB', 'HTE', 'xemehP', 'emehP']
-RWORDS_EXTRA = ['PRX', 'CTB', 'HTE', 'xemehP', 'emehP', 'tsriF', 'tigid-12', 'emirp', 'dnuof', 'ni', 'evitucesnoc', 'stigid', 'fo', 'e']
-
+RWORDS = [i[::-1] for i in WORDS]
+RWORDS_EXTRA = [i[::-1] for i in WORDS_EXTRA]
 #upper
-UWORDS = ['XRP', 'BTC', 'ETH', 'PHEMEX', 'PHEME', ] #, "ΦΉΜΗ" #'957496696762772407663']
-UWORDS_EXTRA = WORDS + 'FIRST 21-DIGIT PRIME FOUND IN CONSECUTIVE DIGITS OF E'.split(' ')
-#WORDS_EXTRA = WORDS + 'First 21-digit prime found in consecutive digits of ℇ'.split(' ')
+UWORDS = [i.upper() for i in WORDS]
+UWORDS_EXTRA = [i.upper() for i in WORDS_EXTRA]
+
+def right_pad_zed(cur):
+    return cur+(64-len(cur))*'0'
 
 def to_binary(s):
     return ''.join(format(i, 'b') for i in bytearray(s, encoding='utf-8'))
@@ -128,6 +129,11 @@ def test_int(intk, debug=False, do_endian=True):
     if int(intk) == 0 or int(intk) > 115792089237316195423570985008687907852837564279074904382605163141518161494337:
         return 'invalid size'
     try:
+        sha_hex = to_hex(intk)
+        sha_key = right_pad_zed(sha_hex)
+        #print(len(sha_key), sha_hex, '->', sha_key)
+        sha_key_compressed = Key.from_hex(sha_key)
+        sha_key_uncompressed = uncompressed_key(sha_key_compressed)
         priv_key_compressed = Key.from_int(int(intk))
         priv_key_uncompressed = uncompressed_key(priv_key_compressed)
         #priv_key_compressed2 = compressed_key(int(intk))
@@ -160,6 +166,10 @@ def test_int(intk, debug=False, do_endian=True):
             bytes_to_hex(priv_key_compressed.public_key),
             bytes_to_hex(priv_key_uncompressed.public_key),
         )
+    if test_key(sha_key_compressed):
+        return True
+    if test_key(sha_key_uncompressed):
+        return True
     if test_key(priv_key_compressed3):
         return True
     if test_key(priv_key_compressed):
