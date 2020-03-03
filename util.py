@@ -36,6 +36,12 @@ RWORDS_EXTRA = [i[::-1] for i in WORDS_EXTRA]
 UWORDS = [i.upper() for i in WORDS]
 UWORDS_EXTRA = [i.upper() for i in WORDS_EXTRA]
 
+def ordstr(s):
+    x = ''
+    for i in s:
+        x += str(ord(i))
+    return x
+
 def right_pad_zed(cur):
     return cur+(64-len(cur))*'0'
 
