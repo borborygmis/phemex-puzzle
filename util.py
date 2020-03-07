@@ -119,17 +119,19 @@ def key_from_hex_uncomp(intk):
     priv_key_uncompressed = uncompressed_key(priv_key_compressed)
     return priv_key_uncompressed
 
-def test_int(intk, debug=False, do_endian=True):
+def test_int(intk, debug=False, do_endian=True, do_ops=True):
+    if do_ops:
+        test_with_prime21e_ops(intk)
     if do_endian:
         n = int(intk)
         n2 = int.from_bytes(n.to_bytes((n.bit_length() + 7) // 8, 'big') or b'\0', byteorder='little')
         #print(n, '->', n2)
-        test_int(n2, do_endian=False)
+        test_int(n2, do_endian=False, do_ops=False)
         # concat PRIME21E
         n3 = str(intk)+str(PRIME21E)
         n4 = str(PRIME21E)+str(intk)
-        test_int(n3, do_endian=False)
-        test_int(n4, do_endian=False)
+        test_int(n3, do_endian=False, do_ops=False)
+        test_int(n4, do_endian=False, do_ops=False)
         #test_int(struct.pack('>L', int(intk)))
 
     if int(intk) == 0 or int(intk) > 115792089237316195423570985008687907852837564279074904382605163141518161494337:
@@ -201,6 +203,19 @@ def test_hex(hex):
         return True
     return False
 
+def test_with_prime21e_ops(i):
+    """Try test_int a bunch of ways using the prime from e"""
+    i2 = int(str(i)+str(i))
+    for x in (i, i2):
+        x = int(x)
+        test_int(x, do_ops=False)
+        test_int(x*2, do_ops=False)
+        test_int(x+PRIME21E, do_ops=False)
+        test_int(x*PRIME21E, do_ops=False)
+        test_int(x//PRIME21E, do_ops=False)
+        test_int(x|PRIME21E, do_ops=False)
+        test_int(x^PRIME21E, do_ops=False)
+        test_int(x%PRIME21E, do_ops=False)
 
 def modular_sqrt(a, p):
     def legendre_symbol(a, p):
